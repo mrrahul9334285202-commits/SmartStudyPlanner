@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Study Planner</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon">S</span> StudyFlow</div>
+    <p class="nav-label">WORKSPACE</p>
+    <nav>
+      <a href="#dashboard" class="nav-link active">▦ &nbsp; Dashboard</a>
+      <a href="#sessions" class="nav-link">◷ &nbsp; Study sessions</a>
+      <a href="#tasks" class="nav-link">☑ &nbsp; Tasks & deadlines</a>
+      <a href="#analytics" class="nav-link">▥ &nbsp; Analytics</a>
+      <a href="#recommendations" class="nav-link">✦ &nbsp; Smart recommendations</a>
+    </nav>
+    <div class="sidebar-note">
+      <span>✦ Your daily reminder</span>
+      <p>Small study sessions create big results. Stay consistent!</p>
+    </div>
+    <div class="sidebar-footer">SMART STUDY PLANNER<br><span>Version 2.0</span></div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">YOUR PERSONAL LEARNING SPACE</p>
+        <h1>Study Dashboard</h1>
+        <p class="muted" id="todayLabel">Track your progress and stay focused.</p>
+      </div>
+      <button class="primary-btn" id="quickAddBtn">＋ Log study session</button>
+    </header>
+
+    <section id="dashboard">
+      <div class="welcome-card">
+        <div>
+          <p class="eyebrow light">YOUR PROGRESS, YOUR PACE</p>
+          <h2>Build your learning streak.</h2>
+          <p>Plan your time, complete your tasks, and keep moving forward.</p>
+        </div>
+        <div class="welcome-symbol">✦</div>
+      </div>
+
+      <div class="stats-grid">
+        <article class="stat-card">
+          <div class="stat-top"><span>Today's study time</span><span class="stat-icon blue">◷</span></div>
+          <strong id="todayMinutes">0 min</strong>
+          <p>Time studied today</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Total study time</span><span class="stat-icon purple">◉</span></div>
+          <strong id="totalMinutes">0 min</strong>
+          <p>Across all sessions</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Study sessions</span><span class="stat-icon green">✓</span></div>
+          <strong id="totalSessions">0</strong>
+          <p>Sessions recorded</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>Active days</span><span class="stat-icon orange">▦</span></div>
+          <strong id="activeDays">0</strong>
+          <p>Days with study activity</p>
+        </article>
+      </div>
+
+      <div class="content-grid">
+        <article class="panel">
+          <div class="panel-heading">
+            <div><h3>Weekly study activity</h3><p class="muted">Your daily study minutes</p></div>
+            <span class="pill">Last 7 days</span>
+          </div>
+          <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading">
+            <div><h3>Monthly overview</h3><p class="muted" id="monthLabel">Study activity</p></div>
+            <div class="month-controls">
+              <button class="icon-btn" id="prevMonth" aria-label="Previous month">‹</button>
+              <button class="icon-btn" id="nextMonth" aria-label="Next month">›</button>
+            </div>
+          </div>
+          <div id="calendarSummary" class="calendar-summary"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="sessions" class="section-block">
+      <div class="section-heading">
+        <div><p class="eyebrow">RECORD YOUR EFFORT</p><h2>Study sessions</h2><p class="muted">Keep track of every focused session.</p></div>
+      </div>
+      <div class="content-grid session-grid">
+        <article class="panel">
+          <h3 id="sessionFormTitle">Log a study session</h3>
+          <form id="sessionForm">
+            <input type="hidden" id="sessionId">
+            <label for="subject">Subject</label>
+            <input id="subject" type="text" maxlength="100" placeholder="e.g. Python, Mathematics" required>
+            <div class="form-row">
+              <div><label for="minutes">Duration (minutes)</label><input id="minutes" type="number" min="1" max="1440" placeholder="60" required></div>
+              <div><label for="studyDate">Study date</label><input id="studyDate" type="date" required></div>
+            </div>
+            <div class="button-row">
+              <button class="primary-btn" type="submit" id="saveSessionBtn">Save session</button>
+              <button class="secondary-btn hidden" type="button" id="cancelEditBtn">Cancel</button>
+            </div>
+            <p id="sessionMessage" class="form-message" role="status"></p>
+          </form>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Recent sessions</h3><p class="muted">Edit or remove a record.</p></div></div>
+          <div id="sessionsList" class="item-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="tasks" class="section-block">
+      <div class="section-heading">
+        <div><p class="eyebrow">STAY ORGANIZED</p><h2>Tasks & deadlines</h2><p class="muted">Plan assignments and prioritize important work.</p></div>
+      </div>
+      <div class="content-grid session-grid">
+        <article class="panel">
+          <h3 id="taskFormTitle">Create a task</h3>
+          <form id="taskForm">
+            <label for="taskTitle">Task title</label>
+            <input id="taskTitle" type="text" maxlength="150" placeholder="e.g. Finish database assignment" required>
+            <label for="taskSubject">Subject</label>
+            <input id="taskSubject" type="text" maxlength="100" placeholder="e.g. DBMS" required>
+            <div class="form-row">
+              <div><label for="dueDate">Deadline</label><input id="dueDate" type="date" required></div>
+              <div><label for="priority">Priority</label><select id="priority"><option>Medium</option><option>High</option><option>Low</option></select></div>
+            </div>
+            <button class="primary-btn full-width" type="submit">＋ Add task</button>
+            <p id="taskMessage" class="form-message" role="status"></p>
+          </form>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Your task list</h3><p class="muted">Manage your pending work.</p></div><span id="taskCount" class="pill">0 tasks</span></div>
+          <div id="tasksList" class="item-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="analytics" class="section-block">
+      <div class="section-heading">
+        <div><p class="eyebrow">UNDERSTAND YOUR HABITS</p><h2>Study analytics</h2><p class="muted">See where your time is going.</p></div>
+      </div>
+      <div class="content-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Study time by subject</h3><p class="muted">Total minutes recorded per subject</p></div></div>
+          <div class="chart-wrap"><canvas id="subjectChart"></canvas></div>
+          <div id="subjectList" class="item-list compact-list"></div>
+        </article>
+        <article class="panel">
+          <h3>Consistency snapshot</h3>
+          <p class="muted">A quick look at your recent activity.</p>
+          <div class="metric-row"><span>Minutes this week</span><strong id="weekMinutes">0</strong></div>
+          <div class="metric-row"><span>Average per active day</span><strong id="dailyAverage">0 min</strong></div>
+          <div class="metric-row"><span>Pending tasks</span><strong id="pendingTasks">0</strong></div>
+          <div class="metric-row"><span>Overdue tasks</span><strong id="overdueTasks">0</strong></div>
+          <p class="muted small">Analytics update from your saved backend data.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="recommendations" class="section-block">
+      <div class="section-heading">
+        <div><p class="eyebrow">YOUR STUDY ASSISTANT</p><h2>Smart recommendations</h2><p class="muted">Actionable suggestions based on your records.</p></div>
+        <button class="secondary-btn" id="refreshRecommendations">Refresh</button>
+      </div>
+      <div id="recommendationsList" class="recommendation-grid"></div>
+    </section>
+
+    <footer class="page-footer">StudyFlow · Smart Study Planner <span>Keep learning, one day at a time.</span></footer>
+    <div id="toast" class="toast" role="status"></div>
+  </main>
+</body>
+</html>
